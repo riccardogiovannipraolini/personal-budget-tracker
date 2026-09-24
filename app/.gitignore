@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+.env.local
+.secrets/
+*.pem
+*.key
+*.log
+.DS_Store
+data/*.json
+!data/.gitkeep

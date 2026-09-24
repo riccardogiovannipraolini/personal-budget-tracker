@@ -1,0 +1,17 @@
+# OS
+.DS_Store
+
+# Node
+node_modules/
+dist/
+*.log
+
+# Secrets / env
+.env
+.env.local
+.secrets/
+*.pem
+*.key
+
+# Local data
+app/data/*.json

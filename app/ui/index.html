@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Budget Tracker</title>
+    <link rel="stylesheet" href="rd-styles.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      window.addEventListener('load', function () {
+        setTimeout(function () { document.body.classList.add('anim-ready'); }, 1400);
+      });
+    </script>
+    <script src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+    <script>
+      // 1) Scarica i dati REALI dall'API. 2) Carica la UI redesign (legge i dati da window.__API via eb-bridge).
+      (async function boot() {
+        try {
+          const [cats, dash, txns] = await Promise.all([
+            fetch('/api/categories').then((r) => r.json()),
+            fetch('/api/dashboard').then((r) => r.json()),
+            fetch('/api/transactions?limit=100000').then((r) => r.json()),
+          ]);
+          window.__API = { cats, dash, txns };
+        } catch (e) {
+          console.error('API non raggiungibile — avvia il server (npm run dev).', e);
+          document.getElementById('root').innerHTML =
+            '<div style="padding:40px;font-family:sans-serif;color:#bbb">API non raggiungibile. Avvia il backend con <code>npm run dev</code> e ricarica.</div>';
+          return;
+        }
+        const files = [
+          'rd-tweaks-panel.jsx', 'rd-data.jsx', 'rd-charts.jsx', 'rd-dashboard.jsx',
+          'rd-categories.jsx', 'rd-notifications.jsx', 'rd-detail.jsx',
+          'eb-bridge.jsx', 'rd-app.jsx',
+        ];
+        for (const f of files) {
+          const s = document.createElement('script');
+          s.type = 'text/babel';
+          s.src = f;
+          s.async = false;
+          document.body.appendChild(s);
+        }
+        // Trasforma ed esegue in ordine gli script appena aggiunti.
+        Babel.transformScriptTags();
+      })();
+    </script>
+  </body>
+</html>

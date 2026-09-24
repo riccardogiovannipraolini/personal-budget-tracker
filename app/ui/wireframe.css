@@ -1,0 +1,144 @@
+/* ============ Wireframe aesthetic — low-fi, hand-drawn ============ */
+@import url('https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Patrick+Hand&display=swap');
+
+:root {
+  --wf-ink: #2b2b2b;
+  --wf-ink-soft: #6b6b6b;
+  --wf-ink-faint: #a8a8a8;
+  --wf-paper: #fbfbf8;
+  --wf-line: #cfcfc8;
+  --wf-fill: #ededea;
+  --wf-fill-2: #e2e2dd;
+  --wf-accent: #16b87a;        /* tweakable */
+  --wf-accent-soft: #d6f3e7;   /* tweakable */
+  --wf-warn: #e8a33d;
+  --wf-warn-soft: #f8ecd3;
+  --wf-danger: #e0604f;
+  --wf-danger-soft: #f7dbd5;
+  --wf-hand: 'Patrick Hand', 'Comic Sans MS', cursive;
+  --wf-head: 'Gaegu', 'Patrick Hand', cursive;
+}
+
+/* hand-drawn wobbly rectangle */
+.wf-sketch {
+  border: 2.2px solid var(--wf-ink);
+  border-radius: 255px 12px 225px 14px / 14px 225px 12px 255px;
+  background: var(--wf-paper);
+}
+.wf-sketch-2 { border-radius: 14px 235px 16px 255px / 245px 14px 235px 16px; }
+.wf-sketch-soft { border-color: var(--wf-ink-soft); border-width: 2px; }
+
+.wf-dash { border-style: dashed; border-width: 2px; border-color: var(--wf-ink-soft); }
+
+.wf-frame {
+  font-family: var(--wf-hand);
+  color: var(--wf-ink);
+  background: var(--wf-paper);
+  width: 100%;
+  height: 100%;
+  padding: 26px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  letter-spacing: .2px;
+  position: relative;
+}
+.wf-frame * { box-sizing: border-box; }
+
+/* dark "fintech" preview mode toggled by tweak */
+.wf-dark {
+  --wf-ink: #ecedf0;
+  --wf-ink-soft: #a6a9b2;
+  --wf-ink-faint: #6d717c;
+  --wf-paper: #16181f;
+  --wf-line: #353a45;
+  --wf-fill: #232733;
+  --wf-fill-2: #2c313e;
+}
+
+/* ---------- type ---------- */
+.wf-h1 { font-family: var(--wf-head); font-weight: 700; font-size: 30px; line-height: 1; margin: 0; }
+.wf-h2 { font-family: var(--wf-head); font-weight: 700; font-size: 22px; line-height: 1; margin: 0; }
+.wf-lbl { font-size: 17px; color: var(--wf-ink-soft); }
+.wf-lbl-sm { font-size: 14px; color: var(--wf-ink-faint); text-transform: uppercase; letter-spacing: 1.4px; }
+.wf-big { font-family: var(--wf-head); font-weight: 700; font-size: 44px; line-height: .95; }
+.wf-num { font-size: 22px; font-weight: 700; font-family: var(--wf-head); }
+.wf-muted { color: var(--wf-ink-soft); }
+.wf-faint { color: var(--wf-ink-faint); }
+
+/* ---------- layout helpers ---------- */
+.wf-row { display: flex; align-items: center; gap: 12px; }
+.wf-col { display: flex; flex-direction: column; }
+.wf-between { justify-content: space-between; }
+.wf-grow { flex: 1; }
+.wf-grid { display: grid; gap: 14px; }
+.wf-wrap { flex-wrap: wrap; }
+
+/* topbar */
+.wf-top { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.wf-period { display: flex; align-items: center; gap: 8px; font-size: 16px; color: var(--wf-ink-soft); }
+
+/* buttons / chips */
+.wf-btn {
+  font-family: var(--wf-hand); font-size: 16px; color: var(--wf-ink);
+  background: var(--wf-fill); border: 2px solid var(--wf-ink);
+  border-radius: 200px 18px 220px 16px / 16px 210px 14px 200px;
+  padding: 7px 16px; cursor: default; white-space: nowrap;
+}
+.wf-btn-accent { background: var(--wf-accent-soft); border-color: var(--wf-accent); color: var(--wf-ink); }
+.wf-chip {
+  font-size: 14px; padding: 4px 12px; border: 1.8px solid var(--wf-ink-soft);
+  border-radius: 200px; color: var(--wf-ink-soft); background: transparent; white-space: nowrap;
+}
+.wf-chip-on { background: var(--wf-ink); color: var(--wf-paper); border-color: var(--wf-ink); }
+
+/* card */
+.wf-card { padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; background: var(--wf-paper); }
+
+/* progress track */
+.wf-track { height: 13px; border-radius: 999px; background: var(--wf-fill-2); border: 1.6px solid var(--wf-line); overflow: hidden; }
+.wf-fill { height: 100%; border-radius: 999px; background: repeating-linear-gradient(45deg, var(--wf-accent), var(--wf-accent) 6px, color-mix(in oklab, var(--wf-accent), #fff 22%) 6px, color-mix(in oklab, var(--wf-accent), #fff 22%) 12px); }
+.wf-fill.warn { background: repeating-linear-gradient(45deg, var(--wf-warn), var(--wf-warn) 6px, color-mix(in oklab, var(--wf-warn), #fff 24%) 6px, color-mix(in oklab, var(--wf-warn), #fff 24%) 12px); }
+.wf-fill.danger { background: repeating-linear-gradient(45deg, var(--wf-danger), var(--wf-danger) 6px, color-mix(in oklab, var(--wf-danger), #fff 24%) 6px, color-mix(in oklab, var(--wf-danger), #fff 24%) 12px); }
+
+/* status dot */
+.wf-dot { width: 11px; height: 11px; border-radius: 50%; flex: none; border: 1.6px solid var(--wf-ink); }
+.wf-dot.ok { background: var(--wf-accent); }
+.wf-dot.warn { background: var(--wf-warn); }
+.wf-dot.danger { background: var(--wf-danger); }
+
+/* status badge */
+.wf-badge { font-size: 13px; padding: 3px 10px; border-radius: 200px; border: 1.6px solid; }
+.wf-badge.ok { color: var(--wf-accent); border-color: var(--wf-accent); background: var(--wf-accent-soft); }
+.wf-badge.warn { color: var(--wf-warn); border-color: var(--wf-warn); background: var(--wf-warn-soft); }
+.wf-badge.danger { color: var(--wf-danger); border-color: var(--wf-danger); background: var(--wf-danger-soft); }
+
+/* placeholder scribble lines (for text blocks) */
+.wf-scribble { height: 9px; border-radius: 999px; background: var(--wf-fill-2); }
+.wf-scribble.w90 { width: 90%; } .wf-scribble.w70 { width: 70%; } .wf-scribble.w50 { width: 50%; } .wf-scribble.w40 { width: 40%; }
+
+/* icon glyph squares (placeholder for icons) */
+.wf-ico {
+  width: 34px; height: 34px; flex: none; display: grid; place-items: center;
+  border: 2px solid var(--wf-ink-soft); border-radius: 14px 6px 16px 6px / 6px 16px 6px 14px;
+  font-size: 18px; color: var(--wf-ink-soft); background: var(--wf-fill);
+}
+.wf-ico-lg { width: 46px; height: 46px; font-size: 24px; }
+
+/* sidebar nav */
+.wf-side { width: 64px; flex: none; display: flex; flex-direction: column; align-items: center; gap: 16px; padding-top: 6px; }
+.wf-side .wf-ico.active { border-color: var(--wf-accent); background: var(--wf-accent-soft); color: var(--wf-ink); }
+
+/* annotation note */
+.wf-note {
+  position: absolute; font-family: var(--wf-hand); font-size: 14px; color: var(--wf-accent);
+  display: flex; align-items: center; gap: 6px; transform: rotate(-3deg);
+}
+.wf-note::before { content: '✎'; }
+
+/* divider */
+.wf-hr { height: 0; border: 0; border-top: 1.8px dashed var(--wf-line); margin: 2px 0; }
+
+/* table */
+.wf-th { font-size: 13px; color: var(--wf-ink-faint); text-transform: uppercase; letter-spacing: 1px; }
+.wf-tr { display: grid; align-items: center; padding: 9px 0; border-bottom: 1.6px dashed var(--wf-line); }

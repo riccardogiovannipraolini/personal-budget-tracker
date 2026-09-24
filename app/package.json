@@ -1,0 +1,41 @@
+{
+  "name": "budget-tracker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Budget tracker personale: import transazioni, categorizzazione, soglie e notifiche",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/server.ts",
+    "start": "node dist/server.js",
+    "run:once": "tsx src/cli.ts run-once",
+    "run:demo": "tsx src/cli.ts demo",
+    "auth": "tsx src/enablebanking/auth.ts",
+    "scheduler": "tsx src/scheduler.ts",
+    "recategorize": "tsx src/cli.ts recategorize",
+    "sync:notion": "tsx src/cli.ts sync-notion",
+    "sync:notion:2way": "tsx src/cli.ts sync-notion --two-way",
+    "pull:notion": "tsx src/cli.ts pull-notion",
+    "db:migrate": "tsx src/cli.ts migrate",
+    "db:seed": "tsx src/cli.ts seed",
+    "test": "NODE_ENV=test node --test --import tsx test/*.test.ts"
+  },
+  "dependencies": {
+    "csv-parse": "^5.5.6",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "node-cron": "^4.2.1",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.9.0",
+    "@types/node-cron": "^3.0.11",
+    "@types/pg": "^8.11.10",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}

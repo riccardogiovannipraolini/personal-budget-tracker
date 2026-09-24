@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Budget Tracker</title>
+    <style>
+      :root {
+        --bg: #0f1115; --card: #1a1d24; --text: #e8eaed; --muted: #9aa0a6;
+        --ok: #34a853; --near: #fbbc04; --over: #ea4335; --track: #2a2e37;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: var(--bg); color: var(--text); padding: 24px; max-width: 760px; margin: 0 auto;
+      }
+      header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+      h1 { font-size: 22px; margin: 0; }
+      .muted { color: var(--muted); font-size: 13px; }
+      button {
+        background: #3b82f6; color: #fff; border: 0; border-radius: 8px;
+        padding: 8px 14px; font-size: 14px; cursor: pointer;
+      }
+      button:disabled { opacity: .5; cursor: default; }
+      .totals { display: flex; gap: 16px; margin: 20px 0; flex-wrap: wrap; }
+      .kpi { background: var(--card); border-radius: 12px; padding: 16px 18px; flex: 1; min-width: 150px; }
+      .kpi .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+      .kpi .value { font-size: 24px; font-weight: 600; margin-top: 4px; }
+      .cat { background: var(--card); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+      .cat .row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+      .cat .name { font-weight: 600; }
+      .cat .amt { font-variant-numeric: tabular-nums; font-size: 14px; }
+      .track { background: var(--track); border-radius: 999px; height: 10px; overflow: hidden; }
+      .fill { height: 100%; border-radius: 999px; transition: width .3s; }
+      .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+      .s-ok { background: var(--ok); } .s-near { background: var(--near); } .s-exceeded { background: var(--over); }
+      footer { color: var(--muted); font-size: 12px; margin-top: 24px; text-align: center; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>📊 Budget Tracker</h1>
+        <div class="muted" id="period">—</div>
+      </div>
+      <button id="sync">Sincronizza</button>
+    </header>
+
+    <section class="totals" id="totals"></section>
+    <section id="categories"></section>
+    <footer id="footer"></footer>
+
+    <script>
+      const eur = (n) =>
+        new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(n ?? 0);
+      const colorFor = (s) => ({ ok: 'var(--ok)', near: 'var(--near)', exceeded: 'var(--over)' }[s] || 'var(--ok)');
+
+      async function load() {
+        const d = await (await fetch('/api/dashboard')).json();
+        document.getElementById('period').textContent = 'Periodo ' + d.period;
+
+        document.getElementById('totals').innerHTML = `
+          <div class="kpi"><div class="label">Speso</div><div class="value">${eur(d.totalSpent)}</div></div>
+          <div class="kpi"><div class="label">Budget</div><div class="value">${eur(d.totalThreshold)}</div></div>
+          <div class="kpi"><div class="label">Residuo</div>
+            <div class="value" style="color:${d.totalRemaining < 0 ? 'var(--over)' : 'var(--ok)'}">${eur(d.totalRemaining)}</div></div>`;
+
+        document.getElementById('categories').innerHTML = d.categories.map((c) => {
+          const pct = Math.min(100, Math.round(c.ratio * 100));
+          return `
+            <div class="cat">
+              <div class="row">
+                <div class="name"><span class="dot s-${c.status}"></span>${c.categoryName}</div>
+                <div class="amt">${eur(c.spent)} <span class="muted">/ ${eur(c.threshold)}</span></div>
+              </div>
+              <div class="track"><div class="fill" style="width:${pct}%;background:${colorFor(c.status)}"></div></div>
+            </div>`;
+        }).join('');
+      }
+
+      document.getElementById('sync').addEventListener('click', async (e) => {
+        const btn = e.target; btn.disabled = true; btn.textContent = 'Sincronizzo…';
+        try {
+          const r = await (await fetch('/api/sync', { method: 'POST' })).json();
+          document.getElementById('footer').textContent =
+            `Ultimo sync: +${r.inserted} nuove, ${r.duplicates} duplicate, ${r.notifications} notifiche.`;
+          await load();
+        } finally {
+          btn.disabled = false; btn.textContent = 'Sincronizza';
+        }
+      });
+
+      load();
+    </script>
+  </body>
+</html>
