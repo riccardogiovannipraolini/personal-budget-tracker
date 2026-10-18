@@ -13,7 +13,7 @@ npm run dev        # avvia la dashboard web su http://localhost:3000
 ```
 
 `npm run dev` (senza `.env`) parte con `STORE=memory` e `SOURCE=mock`: nessun database né
-banca richiesti. La dashboard fa un primo sync all'avvio; il pulsante **Sincronizza** ne forza altri.
+banca richiesti. La dashboard fa un primo sync all'avvio; il pulsante **Sincronizza** ne chiede altri, rispettando l'intervallo minimo (6 ore di default, `SYNC_MIN_INTERVAL_HOURS`).
 
 ## Setup locale completo (full-local, nessun cloud)
 
@@ -48,7 +48,7 @@ Pipeline (`src/pipeline.ts`): **import → deduplica → categorizzazione → ag
 Due astrazioni rendono l'MVP estensibile senza toccare la logica:
 
 - **`TransactionSource`** (`src/sources/`) — da dove arrivano le transazioni.
-  - `mock` (default), `csv` (export Hype), `enablebanking` (Open Banking PSD2 reale, conto Hype),
+  - `mock` (default), `csv` (CSV nel formato dell'app), `enablebanking` (Open Banking PSD2 reale, conto Hype),
     `tink` (stub abbandonato).
 - **`Store`** (`src/store/`) — dove si salvano i dati.
   - `memory` (default, demo/test) · `pg` (Postgres/Supabase, produzione).
@@ -91,7 +91,7 @@ Canale scelto con `NOTIFY`: `console` (default) · `macos` (native, full-local) 
 
 ## Sincronizzare con Notion
 
-Sync **one-way app → Notion**: l'app locale chiama in uscita l'API Notion. Il server e il
+Push **app → Notion** (con `NOTION_SYNC=two-way` anche il ritorno, vedi sotto): l'app locale chiama in uscita l'API Notion. Il server e il
 database non vengono mai esposti. Due destinazioni:
 
 - **Uscite** → un database Spese esistente (es. "Spese — tracker"), `NOTION_DB_SPESE`.
@@ -169,13 +169,13 @@ Vincoli anti-duplicati:
 Fuori ambito: le **cancellazioni** in Notion non si propagano (una riga cancellata verrà ricreata
 alla push); una `Categoria` **vuota** in Notion non azzera la categoria nell'app.
 
-## Importare un CSV reale (estratto Hype)
+## Importare un CSV
 
 ```
 SOURCE=csv
 TRANSACTIONS_CSV=./percorso/al/tuo/export.csv
 ```
-Colonne attese: `external_id, date, amount, merchant, description, category` — `amount` negativo = uscita.
+Il CSV deve essere nel formato dell'app (un export della banca va prima convertito). Colonne attese: `external_id, date, amount, merchant, description, category` — `amount` negativo = uscita.
 
 ## Open Banking reale — Enable Banking (conto Hype)
 

@@ -2,7 +2,7 @@
 
 Comandi operativi rapidi. Dettagli in `README.md`, note di sviluppo in `CLAUDE.md`.
 
-## Avvio quotidiano
+## Avvio
 
 - **Icona** (opzionale): un'app macOS creata con osacompile che lancia `scripts/launch.sh` — avvia Postgres, il server e apre la dashboard.
 - **Manuale**: assicurati che Postgres locale sia acceso, poi:
